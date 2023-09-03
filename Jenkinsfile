@@ -1,11 +1,6 @@
 pipeline {
 
   agent any
-
-  parameters {
-    string defaultValue: '', description: 'Test Name', name: 'TEST_NAME', trim: false
-  }
-
   stages {
     stage('run tests') {
       steps {
@@ -18,7 +13,5 @@ pipeline {
         }
       }
     }
-    ...
   }
-  ...
 }
