@@ -1,30 +1,27 @@
 pipeline {
     agent any
 
-    environment {
-        // Define the path to the Allure command-line executable
-        ALLURE_HOME = tool name: 'Allure', type: 'io.qameta.allure.jenkins.AllureInstallation'
-    }
-
     stages {
         stage('Checkout') {
-            steps {
-                // Checkout your project's source code from your version control system
-                checkout scm
-            }
-        }
+    steps {
+        checkout([$class: 'GitSCM', 
+            branches: [[name: '*/master']], 
+            userRemoteConfigs: [[url: 'https://github.com/rjakkula-rahul/rahul-github.git', credentialsId: 'rahul']]])
+    }
+}
+
 
         stage('Build and Test') {
             steps {
-                // Build your project and run tests
-                sh "${tool name: 'Maven'} clean test"
+                // Build the project and run tests using Maven
+                sh 'mvn clean test'
             }
         }
 
         stage('Generate Allure Report') {
             steps {
                 // Generate Allure report
-                sh "${ALLURE_HOME}/bin/allure generate target/allure-results -o target/allure-report"
+                sh 'allure generate target/allure-results -o target/allure-report'
             }
         }
     }
